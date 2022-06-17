@@ -122,6 +122,7 @@ for x in range(toloop.shape[0]):
     for y in range(toloop.shape[1]):
 
         if x < 3 or x > 94 or y < 3 or y > 94:
+            newpic[x][y] = [0,0, 0]
             continue
 
         curgroup = {}
@@ -138,7 +139,7 @@ for x in range(toloop.shape[0]):
         max_key = list(curgroup.keys())
         rgb = max_key[max_val.index(max(max_val))].split('-')
 
-        if 
+        
         newpic[x][y][0] = float(rgb[0])
         newpic[x][y][1] = float(rgb[1])
         newpic[x][y][2] = float(rgb[2])
