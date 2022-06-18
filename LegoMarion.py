@@ -71,6 +71,7 @@ light = [186, 212, 225]
 middle = [153, 197, 242]
 dark = [115, 181, 239]
 tan = [201, 185, 123]
+darkgreen = [79, 111, 66]
 
 red = [255, 0, 0]
 green = [0, 255, 0]
@@ -156,6 +157,61 @@ for x in range(newpic.shape[0]):
             piececount["middle"] += 1
         elif (newpic[x][y] == blue).all():
             piececount["light"] += 1
-        else:
+        elif (newpic[x][y] == [0,0,0]).all():
             piececount["tan"] += 1
 print(piececount)
+
+
+
+for x in range(newpic.shape[0]):
+    for y in range(newpic.shape[1]):
+        if (newpic[x][y] == red).all():
+            newpic[x][y] = dark
+        elif (newpic[x][y] == green).all():
+            newpic[x][y] = middle
+        elif (newpic[x][y] == blue).all():
+            newpic[x][y] = light
+        else:
+            newpic[x][y] = darkgreen
+
+realset = newpic
+imageio.imwrite("output5.jpg", realset.astype(np.uint8))
+
+
+
+
+
+
+legos = np.ndarray((96,96))
+for x in range(newpic.shape[0]):
+    for y in range(newpic.shape[1]):
+        if (newpic[x][y] == dark).all():
+            legos[x][y] = 0
+        elif (newpic[x][y] == middle).all():
+            legos[x][y] = 1
+        elif (newpic[x][y] == light).all():
+            legos[x][y] = 2
+        else:
+            legos[x][y] = 3
+
+
+
+for x in range(6):
+    for y in range(6):
+
+        cur_tile = np.ndarray((16,16,3))
+        cur_instructions = np.ndarray((16,16))
+
+        for x2 in range(16):
+            for y2 in range(16):
+                cur_tile[x2][y2] = newpic[x*16 + x2][y*16 + y2]
+
+                
+                cur_instructions[x2][y2] = legos[x*16 + x2][y*16 + y2]
+
+        file = open(f"tileinstructions/{x+1}-{y+1}.txt", "w")
+
+        arr = " ".join(str(cur_instructions).split("."))
+        file.write(arr)
+        file.close()
+        imageio.imwrite(f"tiles/{x+1}-{y+1}.jpg", cur_tile.astype(np.uint8))
