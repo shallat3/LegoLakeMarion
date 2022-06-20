@@ -1,3 +1,4 @@
+from tkinter import S
 import numpy as np
 import imageio.v2 as imageio
 import matplotlib.pyplot as plt
@@ -5,50 +6,116 @@ import math
 
 import statistics as st
 
-pic = imageio.imread("realsquarelake.JPG")
-# plt.figure(figsize=(5,5))
-# plt.imshow(pic)
 
-print(pic.shape)
 
-newpic = np.ndarray((96, 96, 3))
+panelwid = 8
+studwid = panelwid * 16
+
+
+mediummostcommon = imageio.imread("mediumsmoothed.JPG")
+
+
+
+
+# mediumimage = np.ndarray((500, 500, 3))
+# medratio = pic.shape[0] / mediumimage.shape[0]
+# print(medratio)
+
+# for x in range(mediumimage.shape[0]):
+#     for y in range(mediumimage.shape[1]):
+#         realx = round(medratio * x) + round(medratio / 2)
+#         realy = round(medratio * y) + round(medratio / 2)
+
+#         mediumimage[x][y] = pic[realx][realy]
+
+# imageio.imwrite("mediumimage.jpg", mediumimage.astype(np.uint8))
+
+
+
+
+# mediummostcommon = np.ndarray((500, 500, 3))
+
+# for x in range(mediumimage.shape[0]):
+#     for y in range(mediumimage.shape[1]):
+
+#         if x < 3 or x > mediumimage.shape[0] - 4 or y < 3 or y > mediumimage.shape[1] - 4:
+#             mediummostcommon[x][y] = mediumimage[x][y]
+#             continue
+
+#         curgroup = {}
+#         for x2 in range (-3, 4):
+#             for y2 in range(-3, 4):
+#                 curpixel = f"{mediumimage[x+x2][y+y2][0]}-{mediumimage[x+x2][y+y2][1]}-{mediumimage[x+x2][y+y2][2]}"
+#                 if curpixel in curgroup.keys():
+#                     curgroup[curpixel] += 1
+#                 else:
+#                     curgroup[curpixel] = 1
+
+
+#         max_val = list(curgroup.values())
+#         max_key = list(curgroup.keys())
+#         rgb = max_key[max_val.index(max(max_val))].split('-')
+
+        
+#         mediummostcommon[x][y][0] = float(rgb[0])
+#         mediummostcommon[x][y][1] = float(rgb[1])
+#         mediummostcommon[x][y][2] = float(rgb[2])
+
+# imageio.imwrite("mediumsmoothed.jpg", mediummostcommon.astype(np.uint8))
+
+
+
+
+
+
+
+# for x in range(pic.shape[0]):
+#     for y in range(pic.shape[1]):
+
+#         if x < 2 or x > pic.shape[0] - 3 or y < 2 or y > pic.shape[1] - 3:
+#             continue
+
+#         r = []
+#         g = []
+#         b = []
+#         for x2 in range (-2, 3):
+#             for y2 in range(-2, 3):
+#                 r.append(pic[x + x2][y + y2][0])
+#                 g.append(pic[x + x2][y + y2][1])
+#                 b.append(pic[x + x2][y + y2][2])
+
+#         smoothedbigimage[x][y][0] = st.mean(r)
+#         smoothedbigimage[x][y][1] = st.mean(g)
+#         smoothedbigimage[x][y][2] = st.mean(b)
+# # plt.figure(figsize=(5,5))
+# # plt.imshow(pic)
+# imageio.imwrite("smoothedbig.jpg", smoothedbigimage.astype(np.uint8))
+
+
+
+ratio = mediummostcommon.shape[0] / studwid
+print(ratio)
+
+newpic = np.ndarray((studwid, studwid, 3))
 print(newpic.shape)
 
 for x in range(newpic.shape[0]):
     for y in range(newpic.shape[1]):
-        realx = 7*x + 3
-        realy = 7*y + 3
+        realx = round(ratio*x) + 2
+        realy = round(ratio*y) + 2
 
-        # current_group = {}
-        # rgb = ""
-        # for x2 in range(-3, 3):
-        #     for y2 in range(-3, 3):
-        #         cur_pixel = f"{pic[realx+x2][realy+y2][0]}-{pic[realx+x2][realy+y2][1]}-{pic[realx+x2][realy+y2][2]}"
-        #         if cur_pixel in current_group.keys():
-        #             current_group[cur_pixel] = current_group[cur_pixel] + 1
-        #         else:
-        #             current_group[cur_pixel] = 1
-
-        #         max_val = list(current_group.values())
-        #         max_key = list(current_group.keys())
-        #         rgb = max_key[max_val.index(max(max_val))].split('-')
-                
-
-
-        # newpic[x][y][0] = int(rgb[0])
-        # newpic[x][y][1] = int(rgb[1])
-        # newpic[x][y][2] = int(rgb[2])
-
-        newpic[x][y] = pic[realx][realy]
+        newpic[x][y] = mediummostcommon[realx][realy]
 
 middlepixel = newpic
 
 imageio.imwrite("output.jpg", middlepixel.astype(np.uint8))
 
+print(middlepixel.shape[1])
+
 for x in range(newpic.shape[0]):
     for y in range(newpic.shape[1]):
 
-        if x < 2 or x > 93 or y < 2 or y > 93:
+        if x < 2 or x > studwid - 3 or y < 2 or y > studwid - 3:
             continue
 
         r = []
@@ -122,13 +189,13 @@ toloop = newpic.copy()
 for x in range(toloop.shape[0]):
     for y in range(toloop.shape[1]):
 
-        if x < 3 or x > 94 or y < 3 or y > 94:
+        if x < 3 or x > studwid - 4 or y < 3 or y > studwid - 4:
             newpic[x][y] = [0,0, 0]
             continue
 
         curgroup = {}
-        for x2 in range (-3, 2):
-            for y2 in range(-3, 2):
+        for x2 in range (-3, 4):
+            for y2 in range(-3, 4):
                 curpixel = f"{toloop[x+x2][y+y2][0]}-{toloop[x+x2][y+y2][1]}-{toloop[x+x2][y+y2][2]}"
                 if curpixel in curgroup.keys():
                     curgroup[curpixel] += 1
@@ -182,7 +249,7 @@ imageio.imwrite("output5.jpg", realset.astype(np.uint8))
 
 
 
-legos = np.ndarray((96,96))
+legos = np.ndarray((studwid, studwid))
 for x in range(newpic.shape[0]):
     for y in range(newpic.shape[1]):
         if (newpic[x][y] == dark).all():
@@ -196,8 +263,8 @@ for x in range(newpic.shape[0]):
 
 
 
-for x in range(6):
-    for y in range(6):
+for x in range(panelwid):
+    for y in range(panelwid):
 
         cur_tile = np.ndarray((16,16,3))
         cur_instructions = np.ndarray((16,16))
@@ -215,3 +282,77 @@ for x in range(6):
         file.write(arr)
         file.close()
         imageio.imwrite(f"tiles/{x+1}-{y+1}.jpg", cur_tile.astype(np.uint8))
+
+
+
+
+def mostcommon(image, neighborhood):
+    xsize = image.shape[0]
+    ysize = image.shape[1]
+
+    toreturn = np.ndarray((xsize, ysize, 3))
+
+    for x in range(xsize):
+        for y in range(ysize):
+            
+            if x < neighborhood or x > xsize - neighborhood - 1 or y < neighborhood or y > ysize - neighborhood - 1:
+                toreturn[x][y] = image[x][y]
+                continue
+
+            curgroup = {}
+            for x2 in range (-1*neighborhood, neighborhood + 1):
+                for y2 in range(-1*neighborhood, neighborhood + 1):
+                    curpixel = f"{image[x+x2][y+y2][0]}-{image[x+x2][y+y2][1]}-{image[x+x2][y+y2][2]}"
+                    if curpixel in curgroup.keys():
+                        curgroup[curpixel] += 1
+                    else:
+                        curgroup[curpixel] = 1
+
+
+            max_val = list(curgroup.values())
+            max_key = list(curgroup.keys())
+            rgb = max_key[max_val.index(max(max_val))].split('-')
+
+                
+            toreturn[x][y][0] = float(rgb[0])
+            toreturn[x][y][1] = float(rgb[1])
+            toreturn[x][y][2] = float(rgb[2])
+    return toreturn
+
+
+def shrink(image, newsize):
+    toreturn = np.ndarray((newsize, newsize, 3))
+
+    ratio = image.shape[0] / newsize
+
+    for x in range(newsize):
+        for y in range(newsize):
+            toreturn[x][y] = image[round(ratio * x) + round(ratio / 2)][round(ratio * y) + round(ratio / 2)]
+
+    return toreturn
+
+def kernelsmooth(image, neighborhood):
+    xsize = image.shape[0]
+    ysize = image.shape[1]
+
+    toreturn = np.ndarray((xsize, ysize, 3))
+
+    for x in range(xsize):
+        for y in range(ysize):
+
+            if x < neighborhood or x > xsize - neighborhood - 1 or y < neighborhood or y > ysize - neighborhood - 1:
+                continue
+
+            r = []
+            g = []
+            b = []
+            for x2 in range (-1 * neighborhood, neighborhood + 1):
+                for y2 in range(-1 * neighborhood, neighborhood + 1):
+                    r.append(image[x + x2][y + y2][0])
+                    g.append(image[x + x2][y + y2][1])
+                    b.append(image[x + x2][y + y2][2])
+
+            toreturn[x][y][0] = st.mean(r)
+            toreturn[x][y][1] = st.mean(g)
+            toreturn[x][y][2] = st.mean(b)
+    return toreturn
