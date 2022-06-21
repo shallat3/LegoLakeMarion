@@ -10,9 +10,10 @@ import statistics as st
 
 
 
-def mostcommon(image, neighborhood):
+def mostcommon(image, neighborhood, excludecolor = [255, 255, 255]):
     xsize = image.shape[0]
     ysize = image.shape[1]
+
 
     toreturn = np.ndarray((xsize, ysize, 3))
 
@@ -23,10 +24,15 @@ def mostcommon(image, neighborhood):
                 toreturn[x][y] = image[x][y]
                 continue
 
+            pix = image[x][y]
+            if int(pix[0]) == excludecolor[0] and int(pix[1]) == excludecolor[1] and int(pix[1]) == excludecolor[1]:
+                toreturn[x][y] = image[x][y]
+                continue
+
             curgroup = {}
             for x2 in range (-1*neighborhood, neighborhood + 1):
                 for y2 in range(-1*neighborhood, neighborhood + 1):
-                    curpixel = f"{image[x+x2][y+y2][0]}-{image[x+x2][y+y2][1]}-{image[x+x2][y+y2][2]}"
+                    curpixel = f"{int(image[x+x2][y+y2][0])}-{int(image[x+x2][y+y2][1])}-{int(image[x+x2][y+y2][2])}"
                     if curpixel in curgroup.keys():
                         curgroup[curpixel] += 1
                     else:

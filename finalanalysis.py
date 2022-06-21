@@ -14,7 +14,9 @@ img = imageio.imread("finalimage2.jpg")
 
 
 img = colormap(img, new_colors)
+
 img = waterborder(img, [79, 111, 66], [220, 234, 237], 2)
+img = mostcommon(img, 2, [79, 111, 66])
 
 
 maketiles(img, new_colors)
