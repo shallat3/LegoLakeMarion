@@ -176,13 +176,21 @@ def addborder(image, bordercolor):
     toreturn = image.copy()
     for x in range(image.shape[0]):
         for y in range(image.shape[1]):
-            if x < 3 or y < 3:
+            if x < 3 or y < 3 or x > image.shape[0] - 4 or y > image.shape[1] - 4:
                 toreturn[x][y] = bordercolor
 
     return toreturn
 
 
-def maketiles(image):
+def maketiles(image, colors):
+
+    colormap = {}
+
+    for i in range(len(colors)):
+        curcolor = f"{colors[i][0]}-{colors[i][1]}-{colors[i][2]}"
+        colormap[curcolor] = i
+
+
     tilewidx = int(image.shape[0] / 16)
     tilewidy = int(image.shape[1] / 16)
 
@@ -190,9 +198,39 @@ def maketiles(image):
         for y in range(tilewidy):
 
             curtile = np.ndarray((16, 16, 3))
+            curinst = np.ndarray((16,16))
 
             for x2 in range(16):
                 for y2 in range(16):
-                    curtile[x2][y2] = image[16*x + x2][16*y + y2]
+                    curpixel = image[16*x + x2][16*y + y2]
+                    curtile[x2][y2] = curpixel
+                    curcolor = f"{int(curpixel[0])}-{int(curpixel[1])}-{int(curpixel[2])}"
+
+                    for color, number in colormap.items():
+                        if color == curcolor:
+                            curinst[x2][y2] = number
+
+            file = open(f"tileinstructions/{x+1}-{y+1}.txt", "w")
+
+            arr = " ".join(str(curinst).split("."))
+            file.write(arr)
+            file.close()
             
             imageio.imwrite(f"tiles/{x+1}-{y+1}.jpg", curtile.astype(np.uint8))
+
+
+def countcolors(image, colors):
+
+    colorcount = {}
+    
+    for color in colors.keys():
+        colorcount[color] = 0
+
+    for x in range(image.shape[0]):
+        for y in range(image.shape[1]):
+            for color, rgb in colors.items():
+
+                if int(image[x][y][0]) == rgb[0] and int(image[x][y][1]) == rgb[1] and int(image[x][y][1]) == rgb[1]:
+                    colorcount[color] += 1
+
+    return colorcount

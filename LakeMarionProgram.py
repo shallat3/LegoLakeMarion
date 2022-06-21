@@ -41,19 +41,13 @@ baseimage = colorchange(baseimage, colors, new_colors)
 
 baseimage = addborder(baseimage, [79, 111, 66])
 
+
 imageio.imwrite("finalimage2.jpg", baseimage.astype(np.uint8))
 
 
 
 
-# shrunk to 500x500
-# used mostcommon twice
-# colormap
-# shrunk to 128x128
-# smoothed
-# mapped
-# added a border
-# changed the colors
+
 
 
 
