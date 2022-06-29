@@ -10,11 +10,11 @@ import statistics as st
 
 
 
-def mostcommon(image, neighborhood, excludecolor = [255, 255, 255]):
+def mostcommon(image, neighborhood, excludecolor = [0,0,0]):
     xsize = image.shape[0]
     ysize = image.shape[1]
 
-
+    excludestring = f"{excludecolor[0]}-{excludecolor[1]}-{excludecolor[2]}"
     toreturn = np.ndarray((xsize, ysize, 3))
 
     for x in range(xsize):
@@ -25,20 +25,25 @@ def mostcommon(image, neighborhood, excludecolor = [255, 255, 255]):
                 continue
 
             pix = image[x][y]
-            if int(pix[0]) == excludecolor[0] and int(pix[1]) == excludecolor[1] and int(pix[1]) == excludecolor[1]:
-                toreturn[x][y] = image[x][y]
-                continue
+            basepix = f"{int(pix[0])}-{int(pix[0])}-{int(pix[0])}"
+            
 
             curgroup = {}
             for x2 in range (-1*neighborhood, neighborhood + 1):
                 for y2 in range(-1*neighborhood, neighborhood + 1):
                     curpixel = f"{int(image[x+x2][y+y2][0])}-{int(image[x+x2][y+y2][1])}-{int(image[x+x2][y+y2][2])}"
+
+                    if curpixel == excludestring:
+                        if basepix != excludestring:
+                            continue
+
+
                     if curpixel in curgroup.keys():
                         curgroup[curpixel] += 1
                     else:
                         curgroup[curpixel] = 1
 
-
+        
             max_val = list(curgroup.values())
             max_key = list(curgroup.keys())
             rgb = max_key[max_val.index(max(max_val))].split('-')
@@ -50,13 +55,13 @@ def mostcommon(image, neighborhood, excludecolor = [255, 255, 255]):
     return toreturn
 
 
-def shrink(image, newsize):
-    toreturn = np.ndarray((newsize, newsize, 3))
+def shrink(image, newsizex, newsizey):
+    toreturn = np.ndarray((newsizex, newsizey, 3))
 
-    ratio = image.shape[0] / newsize
+    ratio = image.shape[0] / newsizex
 
-    for x in range(newsize):
-        for y in range(newsize):
+    for x in range(newsizex):
+        for y in range(newsizey):
             toreturn[x][y] = image[round(ratio * x) + round(ratio / 2)][round(ratio * y) + round(ratio / 2)]
 
     return toreturn

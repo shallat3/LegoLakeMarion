@@ -11,17 +11,7 @@ colors = [[142, 181, 236], [170, 197, 240], [196,213,223], [220,234,237], [195,1
 
 new_colors = [[220,234,237],[196,213,223],[170, 197, 240],[142, 181, 236],[79, 111, 66]]
 
-# shrunksmoothmap = imageio.imread("shrunksmoothmap.jpg")
-# shrunksmoothmap = colormap(shrunksmoothmap, colors)
-# newborder = addborder(shrunksmoothmap, [195, 185, 126], [142, 181, 236], 2)
 
-                    
-# imageio.imwrite("newborder.jpg", newborder.astype(np.uint8))
-
-
-# newcolors = colorchange(newborder, colors, new_colors)
-
-# imageio.imwrite("finalimage.jpg", newcolors.astype(np.uint8))
 
 baseimage = imageio.imread("newsquarepic.jpg")
 
